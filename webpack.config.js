@@ -1,68 +1,82 @@
+const path = require("path");
 const webpack = require('webpack');
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const config = {
-  entry: [
-    'react-hot-loader/patch',
-    './src/index.js'
-  ],
+const {
+  NODE_ENV: nodeEnv = 'development'
+} = process.env;
+const devMode = nodeEnv !== "production";
+const pkg = require("./package.json");
+
+module.exports = {
+  entry: {
+    app: "./src/index.js",
+    vendor: Object.keys(pkg.dependencies)
+  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: devMode ? "[name].js" : "[name].[hash].js",
+    path: path.resolve(__dirname, "dist"),
+    chunkFilename: devMode ? "[name].js" : "[name].[chunkhash].js",
+    publicPath: "/"
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          chunks: "all"
+        }
+      }
+    }
+  },
+  devServer: {
+    historyApiFallback: {
+      index: "/index.html"
+    }
+  },
+  watchOptions: {
+    poll: true
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
+        test: /\.js|jsx$/,
+        use: {
+          loader: "babel-loader"
+        },
+        resolve: {
+          extensions: ['.js', '.jsx']
+        }
       },
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
-      },
-      {
-        test: /\.png$/,
+        test: /\.scss|css$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: "css-loader"
+          },
+          {
+            loader: "sass-loader",
             options: {
-              mimetype: 'image/png'
+              sassOptions: {
+                includePaths: ["src/styles/"]
+              }
             }
           }
         ]
       }
     ]
   },
-  devServer: {
-    'static': {
-      directory: './dist'
-    }
-  },
   plugins: [
-    new CopyPlugin({
-      patterns: [{ from: 'src/index.html' }],
-    }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      templateContent: ({ htmlWebpackPlugin }) => '<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>' + htmlWebpackPlugin.options.title + '</title></head><body><div id=\"app\"></div></body></html>',
-      filename: 'index.html',
-    }),,
-    new CleanWebpackPlugin()
+      filename: "index.html",
+      chunks: ["vendor", "app"],
+      template: path.join(__dirname, "public", "index.html")
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+      'process.env.API_PATH': JSON.stringify(process.env.API_PATH)
+    })
   ]
 };
-
-module.exports = config;

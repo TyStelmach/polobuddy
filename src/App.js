@@ -1,23 +1,33 @@
 
 import React from "react";
+import styled from 'styled-components'
 import { hot } from 'react-hot-loader/root';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+  getAllPlayersInSession,
+  createNewPlayer
+} from './services/player';
 
-class App extends React.Component {
-  render() {
-    const { name } = this.props;
-    return (
-      <>
-        <h1>
-          Hello {name}
-        </h1>
-        <button type="button" class="btn btn-primary">
-          This is a bootstrap button
-        </button>
-      </>
-    );
-  }
+import { default as Home } from './components/layouts/home';
+import { default as Navigation } from './components/core/navigation';
+
+const Wrapper = styled.div`
+  max-width: 1280px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: lightgray;
+`
+
+const App = () => {
+  return (
+    <div>
+      <Navigation />
+      {/*  set up routing based on page */}
+      <Wrapper>
+        Test
+        <Home />
+      </Wrapper>
+    </div>
+  );
 }
 
 export default hot(App);
