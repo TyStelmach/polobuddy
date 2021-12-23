@@ -1,12 +1,17 @@
-export const newSession = {
-  "totalGames": 0,
-  "activeGame": {
-    "isStarted": false,
-    "gameSpeed": "null",
-    "teams": {
-      "teamOne": [""],
-      "teamTwo": [""],
+class Session {
+  constructor() {
+    this.totalGames = 0;
+    this.activeGame = {
+      isStarted: false,
+      speed: 'null',
+      teams: {
+        teamOne: [0],
+        teamTwo: [0]
+      }
     }
-  },
-  "players": [""],
+  }
 };
+
+module.exports = {
+  Session,
+}

@@ -6,7 +6,7 @@ const { database: { sessions } } = require('../models/dbRoots');
 
 const firebaseGet = async (paramString = '') => {
   try {
-    const { data } = await axios.get(`${databaseURL}/${sessions}/${paramString}.json`);
+    const { data } = await axios.get(`${databaseURL}/${paramString}.json`);
     return data;
   } catch (err) {
     console.log('err:', err);
@@ -15,7 +15,7 @@ const firebaseGet = async (paramString = '') => {
 
 const firebasePost = async (paramString = '', creationModel) => {
   try {
-    const { data: { name } } = await axios.post(`${databaseURL}/${sessions}/${paramString}.json?auth=${authKey}`, creationModel);
+    const { data: { name } } = await axios.post(`${databaseURL}/${paramString}.json?auth=${authKey}`, creationModel);
     return name;
   } catch (err) {
     console.log('err', err);
@@ -24,7 +24,7 @@ const firebasePost = async (paramString = '', creationModel) => {
 
 const firebasePush = async (paramString = '', creationModel) => {
   try {
-    const { data: { name } } = await axios.push(`${databaseURL}/${sessions}/${paramString}json?auth=${authKey}`, creationModel);
+    const { data: { name } } = await axios.push(`${databaseURL}/${paramString}json?auth=${authKey}`, creationModel);
     return name;
   } catch (err) {
     console.log('err', err);
@@ -51,7 +51,7 @@ const firebasePatch = async(paramsString = '', newData) => {
 
 const getActiveGameOfSession = async (sessionId) => {
   try {
-    const { data } = await axios.get(`https://polobuddy-d935a-default-rtdb.firebaseio.com/sessions/${sessionId}/activeGame.json`);
+    const { data } = await axios.get(`${databaseURL}/${sessions}/${sessionId}/activeGame.json`);
     return data;
   } catch (err) {
     console.log('err:', err);
@@ -61,7 +61,7 @@ const getActiveGameOfSession = async (sessionId) => {
 
 const createNewSession = async () => {
   try {
-    const { data: { name } } = await axios.post(`https://polobuddy-d935a-default-rtdb.firebaseio.com/sessions.json?auth=${authKey}`, newSession);
+    const { data: { name } } = await axios.post(`${databaseURL}/${sessions}.json?auth=${authKey}`, newSession);
     return name;
   } catch (err) {
     console.log('err', err);
@@ -70,7 +70,7 @@ const createNewSession = async () => {
 
 const createNewPlayer = async (sessionName) => {
   try {
-    const { data: { name } } = await axios.post(`https://polobuddy-d935a-default-rtdb.firebaseio.com/sessions/${sessionName}/players.json?auth=${authKey}`, newPlayer);
+    const { data: { name } } = await axios.post(`${databaseURL}/${sessions}/${sessionName}/players.json?auth=${authKey}`, newPlayer);
     return name;
   } catch (err) {
     console.log('err', err);
@@ -85,7 +85,7 @@ const createTeamInActiveGame = async (
   try {
     if (playerIds.length >= 2) {
       const team = `team-${index+1}`
-      const { data } = await axios.put(`https://polobuddy-d935a-default-rtdb.firebaseio.com/sessions/${sessionName}/activeGame/teams/${team}.json?auth=${authKey}`, playerIds);
+      const { data } = await axios.put(`${databaseURL}/${sessions}/${sessionName}/activeGame/teams/${team}.json?auth=${authKey}`, playerIds);
       console.log(data);
     }
   } catch (err) {

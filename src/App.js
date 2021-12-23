@@ -1,14 +1,10 @@
 
 import React from "react";
 import styled from 'styled-components'
-import { hot } from 'react-hot-loader/root';
-import {
-  getAllPlayersInSession,
-  createNewPlayer
-} from './services/player';
+import PageRouting from './components/routes';
+import Navigation from './components/core/navigation';
+import Footer from './components/core/footer';
 
-import { default as Home } from './components/layouts/home';
-import { default as Navigation } from './components/core/navigation';
 
 const Wrapper = styled.div`
   max-width: 1280px;
@@ -21,13 +17,12 @@ const App = () => {
   return (
     <div>
       <Navigation />
-      {/*  set up routing based on page */}
       <Wrapper>
-        Test
-        <Home />
+        <PageRouting />
       </Wrapper>
+      <Footer />
     </div>
   );
 }
 
-export default hot(App);
+export default App;

@@ -1,47 +1,50 @@
-import React from "react";
-import { Container, Col, Row, Card, CardBody, CardTitle, CardText, Button } from 'reactstrap';
+import React, { useState } from "react";
+import { Container, Col, Row, Card } from 'reactstrap';
 
-const Home = () => (
-  <Container>
-    <Row xs="2">
-      <Col>
-        <Card>
-          <CardBody>
-            <CardTitle tag="h5">
-              Host new session
-            </CardTitle>
-            <CardText>
-              Begin hosting a polo session and allow others to join
-            </CardText>
-            <Button>
-              Host Session
-            </Button>
-          </CardBody>
-        </Card>
-      </Col>
+import HomeCardBody from "../core/homeCardContent";
+import FormModal from "../core/formModal";
 
-      <Col>
-        <Card>
-          <CardBody>
-            <CardTitle tag="h5">
-              Join existing session
-            </CardTitle>
-            <CardText>
-              Join an existing session to begin playing polo
-            </CardText>
-            <Button>
-              Join Session
-            </Button>
-          </CardBody>
-        </Card>
-      </Col>
+const Home = () => {
+  const [modal, setModal] = useState(false);
+  const [type, setType] = useState('');
 
-    </Row>
+  const togglePopup = (e) => {
+    setModal(!modal);
+    setType(e.target.name);
+  };
 
-    <Row xs="2">
-      Test Row
-    </Row>
-  </Container>
-);
+  return (
+    <Container>
+      <Row xs="2">
+        <Col>
+          <Card>
+            <HomeCardBody
+              title="Host new session"
+              description="Begin hosting a polo session and allow others to join"
+              type="host"
+              toggle={togglePopup} 
+            />
+          </Card>
+        </Col>
+
+        <Col>
+          <Card>
+            <HomeCardBody
+              title="Join existing session"
+              description="Join an existing session to begin playing polo"
+              type="join"
+              toggle={togglePopup} 
+            />
+          </Card>
+        </Col>
+      </Row>
+      <Row xs="2">
+        Test Row
+      </Row>
+
+      <FormModal id="myModal" toggle={togglePopup} type={type} modal={modal} />
+    </Container>
+  )
+};
 
 export default Home;

@@ -1,13 +1,18 @@
 const { firebaseGet, firebasePost, firebasePush, firebaseDelete} = require('../libs/utils');
-const { newSession } = require('../models/newSession');
+const { database } = require('../models/dbRoots');
+const { Session } = require('../models/newSession');
 
 const getAllSessions = async () => firebaseGet('');
 
-const getSessionById = async (sessionId) => firebaseGet(sessionId);
+const getSessionById = async (sessionId) => firebaseGet(`${database.sessions}/${sessionId}`);
 
-const createNewSession = async () => firebasePost('', newSession);
+const createNewSession = async () => {
+  const newSession = new Session();
+  const id = await firebasePost(database.sessions, newSession);
+  return id;
+};
 
-const deleteSessionById = async (sessionId) => firebaseDelete(sessionId);
+const deleteSessionById = async (sessionId) => firebaseDelete(`${database.sessions}/${sessionId}`);
 
 module.exports = {
   getAllSessions,
