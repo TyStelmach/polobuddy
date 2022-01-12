@@ -12,7 +12,8 @@ const FormModal = ({
   const [formData, setFormData] = useState({});
 
   const handleInputChange = (e) => {
-    e.persist();
+    //e.persist();
+    console.log('aaa', e)
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 

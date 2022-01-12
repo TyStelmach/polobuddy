@@ -1,4 +1,5 @@
 import React from 'react';
+import { DebounceInput } from 'react-debounce-input';
 import { Form, FormGroup, Label, Col, Input } from 'reactstrap';
 
 const SignupForm = ({
@@ -28,13 +29,13 @@ const SignupForm = ({
         Your username
       </Label>
       <Col>
-        <Input
+        <DebounceInput
+          debounceTimeout={300}
           id="yourUsername"
           name="username"
           placeholder="Enter your Username"
           type="text"
-          onBlur={changeHandler}
-        />
+          onChange={changeHandler} />
       </Col>
     </FormGroup>
     <FormGroup row>
@@ -46,10 +47,11 @@ const SignupForm = ({
         id="yourSkillLevel"
         name="skillLevel"
         type="select"
-        onBlur={changeHandler}
-        placeholder="Select Skill level"
-        defaultValue="2"
+        onChange={changeHandler}
       >
+        <option disabled hidden selected>
+          Select Skill level
+        </option>
         <option>
           Beginner
         </option>

@@ -14,21 +14,21 @@ const User = () => {
   const [activeGame, setActiveGame] = useState({});
   const [teams, setTeams] = useState([]);
 
-  useEffect(() => {
-    const fetchActiveGame = async () => {
-      const game = await getActiveGameBySession('-Mr5Za45mfPrw35CtnGm');
-      setActiveGame(game);
-      const teamArrs = Object.values(game.teams);
-      setTeams(...teams, teamArrs)
-    }
+  const fetchActiveGame = async () => {
+    const game = await getActiveGameBySession('-MtB-eomPO8zN_nqKLlK');
+    setActiveGame(game);
+    const teamArrs = Object.values(game.teams);
+    setTeams(...teams, teamArrs)
+  }
 
-    const fetchPlayers = async () => {
-      const playersInSession = await getAllPlayersInSession('-Mr5Za45mfPrw35CtnGm');
-      setPlayers(...players, playersInSession);
-    };
+  const fetchPlayers = async () => {
+    const playersInSession = await getAllPlayersInSession('-MtB-eomPO8zN_nqKLlK');
+    setPlayers(...players, playersInSession);
+  };
 
-    fetchActiveGame();
-    fetchPlayers();
+  useEffect(async () => {
+    await fetchActiveGame();
+    await fetchPlayers();
   }, []);
 
   return (

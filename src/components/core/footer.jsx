@@ -6,8 +6,8 @@ const FooterText = styled.div`
   color: #fff;
   text-align: center;
   margin: 0 auto;
-  display: block
-`
+  display: block;
+`;
 
 const Footer = () => (
   <div>
