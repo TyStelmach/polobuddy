@@ -1,5 +1,5 @@
-const { firebaseGet, firebasePost, firebaseDelete} = require('../libs/utils');
-const { getSessionById, createNewSession } = require('./session');
+const { firebaseGet, firebasePost, firebaseDelete, firebasePatch} = require('../libs/utils');
+const { getSessionById, createNewSession, getSessionByPublicId } = require('./session');
 const { database } = require('../models/dbRoots');
 const { Player } = require('../models/newPlayer');
 
@@ -17,10 +17,10 @@ const getAllPlayersInSession = async (sessionId) => {
   };
 };
 
-const createNewPlayer = async ({sessionId, username, skillLevel}) => {
-  const sessionExists = await getSessionById(sessionId);
-  if (sessionExists) {
-    const newPlayer = new Player(username, skillLevel, sessionId)
+const createNewPlayer = async ({publicId, username, skillLevel}) => {
+  const privateId = await getSessionByPublicId(publicId);
+  if (privateId) {
+    const newPlayer = new Player(username, skillLevel, privateId, false)
     const id = await firebasePost(`${database.players}`, newPlayer);
 
     if (id) window.location.href = './session/user';
@@ -39,11 +39,20 @@ const createNewHost = async ({username, skillLevel}, isHost) => {
   }
 };
 
+const incrementPlayerGameCount = async (sessionId, playerId, playerGameCount) => {
+  console.log(sessionId, playerId, playerGameCount)
+  await firebasePatch(`${database.players}/${playerId}`, {
+    gameCount: playerGameCount += 1,
+  });
+};
+
+
 const deletePlayerFromSession = async (sessionId) => firebaseDelete(`${sessionId}/${database.players}/${playerId}`);
 
 module.exports = {
   getAllPlayersInSession,
   createNewPlayer,
   createNewHost,
-  deletePlayerFromSession
+  deletePlayerFromSession,
+  incrementPlayerGameCount
 };

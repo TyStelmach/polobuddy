@@ -9,7 +9,7 @@ const StandardCardBody = ({
     <CardTitle tag="h5">
       {title}
     </CardTitle>
-      {children}
+    {children}
   </CardBody>
 );
 

@@ -1,5 +1,6 @@
 class Session {
   constructor() {
+    this.publicId = '';
     this.totalGames = 0;
     this.activeGame = {
       isStarted: false,

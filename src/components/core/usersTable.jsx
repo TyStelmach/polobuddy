@@ -4,7 +4,6 @@ import { Table } from 'reactstrap';
 const UsersTable = ({
   players
 }) => (
-  
 <Table borderless striped>
   <thead>
     <tr>
@@ -24,7 +23,7 @@ const UsersTable = ({
   </thead>
   <tbody>
     {players.map((player, index) => 
-      <tr>
+      <tr key={index}>
         <th scope="row">
           {index + 1}
         </th>

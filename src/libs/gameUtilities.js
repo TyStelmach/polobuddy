@@ -1,5 +1,3 @@
-// 0 = beginner, 1 = intermediate, 2=veteran
-
 const sortByPlayPct = (players, GC) => {
   const setP = (player, GC) => {
     const levels = {
@@ -73,6 +71,11 @@ const createTeams = (playersFromDatabase, sessionTotalGames) => {
   getPlayer(playerPool);
   return teams;
 };
+
+const startGame = (players, session) => {
+
+
+}
 
 module.exports = {
   createTeams

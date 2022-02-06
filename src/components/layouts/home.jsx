@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Col, Row, Card } from 'reactstrap';
 
 import HomeCardBody from "../core/homeCardContent";
 import FormModal from "../core/formModal";
+import { getSessionByPublicId } from "../../services/session";
 
 const Home = () => {
   const [modal, setModal] = useState(false);
@@ -12,6 +13,11 @@ const Home = () => {
     setModal(!modal);
     setType(e.target.name);
   };
+
+  useEffect(async () => {
+    const c = await getSessionByPublicId('67F-NCI8');
+    console.log(c[0]);
+  }, []);
 
   return (
     <Container>

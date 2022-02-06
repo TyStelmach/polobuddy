@@ -24,7 +24,7 @@ const firebasePost = async (paramString = '', creationModel) => {
 
 const firebasePush = async (paramString = '', creationModel) => {
   try {
-    const { data: { name } } = await axios.push(`${databaseURL}/${paramString}json?auth=${authKey}`, creationModel);
+    const { data: { name } } = await axios.push(`${databaseURL}/${paramString}.json?auth=${authKey}`, creationModel);
     return name;
   } catch (err) {
     console.log('err', err);
@@ -40,9 +40,9 @@ const firebaseDelete = async (paramString = '') => {
   }
 }
 
-const firebasePatch = async(paramsString = '', newData) => {
+const firebasePatch = async(paramString = '', newData) => {
   try {
-    const { data: { name } } = await axios.patch(`${databaseURL}/${sessions}/${paramString}json?auth=${authKey}`, newData);
+    const { data: { name } } = await axios.patch(`${databaseURL}/${paramString}.json?auth=${authKey}`, newData);
     return name;
   } catch (err) {
     console.log('err', err);
@@ -97,5 +97,6 @@ module.exports = {
   firebaseGet,
   firebasePost,
   firebasePush, 
+  firebasePatch,
   firebaseDelete
 };
