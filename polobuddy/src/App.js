@@ -1,26 +1,37 @@
 /* eslint import/first: 0 */ 
-import React from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import {firestore, auth} from './services/firebase.js'
+import PageRouting from './components/routes';
 import Header from './components/core/Header';
+import { AuthProvider } from './providers/AuthProvider';
+import FirebaseProvider from './providers/FirebaseProvider';
 
-import Home from './scenes/homeScreen';
+const App = () => {
+  const [session, setSession] = useState({});
+  const [loading, setLoading] = useState(true);
 
-function App() {
-  const [user] = useAuthState(auth);
+  //getSessionsFromFirestore();
+  // snapshot.forEach(doc => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
+ 
+ 
 
   return (
     <div className="App">
-      <Header
-        user={user}
-      />
+      <FirebaseProvider>
+        <AuthProvider >
+          <Header />
 
+          <header className="App-header">
+            New App
+          </header>
 
-      <section>
-        <Home />
-      </section>
+          <section>
+            <PageRouting />
+          </section>
+        </AuthProvider>
+      </FirebaseProvider>
     </div>
   );
 }

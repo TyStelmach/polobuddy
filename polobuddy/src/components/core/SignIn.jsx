@@ -1,20 +1,15 @@
-import React from 'react';
+import React, { useContext} from 'react';
 import { Button } from 'reactstrap';
-import firebase from 'firebase/compat/app';
-import { GoogleAuthProvider } from '@firebase/auth';
+import { AuthContext } from '../../providers/AuthProvider';
 
 const SignIn = () => {
-  const auth = firebase.auth();
-
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  }
+  const auth = useContext(AuthContext);
+  const loginFn = auth.login;
 
   return (
     <Button 
       color="primary"
-      onClick={() => signInWithGoogle()}>
+      onClick={() => loginFn()}>
       Sign In
     </Button>
   )

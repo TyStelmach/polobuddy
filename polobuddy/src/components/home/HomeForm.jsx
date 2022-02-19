@@ -1,12 +1,28 @@
 import React from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import { Form, FormGroup, Label, Col, Input } from 'reactstrap';
-
+//LJT-AIND
 const SignupForm = ({
   type,
   changeHandler
 }) => (
   <Form>
+    {type === 'join' ?
+      <FormGroup row>
+        <Label for="sessionId">
+          Your session ID
+        </Label>
+        <Col>
+          <Input
+            id="yourSessionId"
+            name="sessionId"
+            placeholder="Enter your Session ID"
+            type="text"
+            onBlur={changeHandler}
+          />
+        </Col>
+      </FormGroup>
+    : ''}
     <FormGroup row>
       <Label for="username">
         Your username

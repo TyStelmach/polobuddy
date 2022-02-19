@@ -1,9 +1,9 @@
 class Player {
-  constructor(name, skillLevel, sessionId, isHost=false) {
-    this.name = name;
-    this.skillName = skillLevel;
+  constructor(username, skillName, sessionId, isHost=false) {
+    this.name = username;
+    this.skillName = skillName;
     this.gameCount = 0;
-    this.isHost = isHost;
+    this.isHost = false;
     this.sessionPublicId = sessionId;
     this.weight = 0;
   }

@@ -1,16 +1,17 @@
-import React from 'react';
-import firebase from 'firebase/compat/app';
+import React, { useContext } from 'react';
 import { Button } from 'reactstrap';
+import { AuthContext } from '../../providers/AuthProvider';
 
+const SignOut = () => {
+  const { logout } = useContext(AuthContext);
 
-const auth = firebase.auth();
-
-const SignOut = () => (
-  <Button 
-    color="primary"
-    onClick={() => auth.signOut()}>
-    Sign Out
-  </Button>
-);
+  return (
+    <Button 
+      color="primary"
+      onClick={() => logout()}>
+      Sign Out
+    </Button>
+  )
+};
 
 export default SignOut;

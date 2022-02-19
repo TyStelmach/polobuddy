@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navbar, NavbarBrand } from 'reactstrap';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
+import { AuthContext } from '../../providers/AuthProvider';
 
-const Header = ({
-  user
-}) => {
+const Header = () => {
+  const { user } = useContext(AuthContext);
+
   return(
      <div>
     <Navbar color="dark" expand="md" dark>

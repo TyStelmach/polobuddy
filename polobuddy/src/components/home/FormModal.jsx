@@ -1,25 +1,31 @@
-import React, { useState } from 'react';
-import firebase from 'firebase/compat/app';
-import { GoogleAuthProvider } from '@firebase/auth';
+import React, { useContext, useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-
+import { AuthContext } from '../../providers/AuthProvider';
 import SignupForm from './HomeForm';
-import SignIn from '../core/SignIn';
 import { createNewSession } from '../../services/session';
+import { createNewPlayer } from '../../services/player';
 
 const FormModal = ({
   type='host',
   modal=false,
   toggle={},
 }) => { 
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({});
-  const auth = firebase.auth();
 
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-    await createNewSession('123', '456');
-  }
+  const registerToApp = async () => {
+    try {
+      const userId = await login();
+      console.log(userId)
+      if (userId) {
+        // User has auth'd in via google
+        const sessionId = type === 'host' ? await createNewSession(userId) : formData.sessionId;
+        await createNewPlayer(userId, sessionId, formData, type);
+      }
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
 
   const handleInputChange = (e) => {
     //e.persist();
@@ -36,7 +42,7 @@ const FormModal = ({
       </ModalBody>
       <ModalFooter>
         <Button 
-          onClick={() => signInWithGoogle()}>
+          onClick={() => registerToApp()}>
           Sign In
         </Button>
         <Button onClick={toggle}>
