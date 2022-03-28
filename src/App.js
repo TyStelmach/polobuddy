@@ -1,23 +1,28 @@
 
 import React from "react";
-import { hot } from 'react-hot-loader/root';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import styled from 'styled-components'
+import PageRouting from './components/routes';
+import Navigation from './components/core/navigation';
+import Footer from './components/core/footer';
 
-class App extends React.Component {
-  render() {
-    const { name } = this.props;
-    return (
-      <>
-        <h1>
-          Hello {name}
-        </h1>
-        <button type="button" class="btn btn-primary">
-          This is a bootstrap button
-        </button>
-      </>
-    );
-  }
+
+const Wrapper = styled.div`
+  max-width: 1280px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: lightgray;
+`
+
+const App = () => {
+  return (
+    <div>
+      <Navigation />
+      <Wrapper>
+        <PageRouting />
+      </Wrapper>
+      <Footer />
+    </div>
+  );
 }
 
-export default hot(App);
+export default App;
