@@ -1,16 +1,30 @@
 const { Player } = require('../models/newPlayer');
-const { addDocToCollection } = require('./collections');
+const { addNewDocumentRandomId, addNewDocumentPresetId } = require('./collections');
 
-const createNewPlayer = async (userId, sessionId, { username, skillLevel }, type) => {
+const createNewPlayer = async (userId, sessionId, formData, type) => {
+  console.log('aaaaa', userId)
+
+  const { username, skillLevel } = formData;
   const newPlayer = new Player();
   newPlayer.name = username;
   newPlayer.sessionPublicId = sessionId;
   newPlayer.skillName = skillLevel;
   newPlayer.isHost = type === 'host' ? true : false;
-  console.log(newPlayer)
-  await addDocToCollection('Players', {...newPlayer}, userId);
+  newPlayer.id = userId;
+  await addNewDocumentPresetId(userId, {...newPlayer}, 'Players');
   return newPlayer;
 };
+
+const addPlayerToSession = async ({ name, skillName, isHost, gameCount, weight}) => {
+  const playerClone = {
+    name,
+    skillName,
+    isHost,
+    gameCount,
+    weight
+  };
+
+}
 
 module.exports = {
   createNewPlayer

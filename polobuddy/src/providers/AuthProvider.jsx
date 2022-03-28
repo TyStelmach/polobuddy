@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { FirebaseContext } from './FirebaseProvider';
+import { deleteDocumentById } from '../services/collections';
 
 export const AuthContext = createContext();
 
@@ -30,15 +31,18 @@ export const AuthProvider = (props) => {
 
       let user = userCred.user;
       setUser(user);
+      return user;
     } catch (err) {
       let msg = `Login failure: ${err.message})`;
       console.log(msg);
     }
   }
 
-  const logoutFunction = async () => {
+  const logoutFunction = async (id) => {
     try {
       setUser(null);
+      console.log('myid', id)
+      await deleteDocumentById(id, 'Players');
       await signOut(auth);
     } catch (err) {
       console.error(err);

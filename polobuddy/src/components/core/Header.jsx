@@ -5,13 +5,12 @@ import SignOut from './SignOut';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const Header = () => {
-  const { user } = useContext(AuthContext);
-
+  const { user } = useContext(AuthContext); 
   return(
      <div>
     <Navbar color="dark" expand="md" dark>
       <NavbarBrand href="/">PoloBuddy</NavbarBrand>
-      {user ? <SignOut /> : <SignIn />}
+      {user ? <SignOut id={user.uid} /> : <SignIn />}
     </Navbar>
   </div>
 )

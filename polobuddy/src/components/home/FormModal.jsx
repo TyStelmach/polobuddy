@@ -2,25 +2,27 @@ import React, { useContext, useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { AuthContext } from '../../providers/AuthProvider';
 import SignupForm from './HomeForm';
-import { createNewSession } from '../../services/session';
+import { createNewSession, addPlayerToSession } from '../../services/session';
 import { createNewPlayer } from '../../services/player';
+const { generatePublicSessionId } = require('../../libs/utilities')
 
 const FormModal = ({
+  userId,
   type='host',
   modal=false,
   toggle={},
 }) => { 
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({});
-
   const registerToApp = async () => {
     try {
-      const userId = await login();
-      console.log(userId)
-      if (userId) {
-        // User has auth'd in via google
-        const sessionId = type === 'host' ? await createNewSession(userId) : formData.sessionId;
-        await createNewPlayer(userId, sessionId, formData, type);
+      const userAuth = await login();
+      if (userAuth) {
+        const sessionId = type === 'host' ? await generatePublicSessionId() : formData.sessionId;
+        const newPlayer = await createNewPlayer(userAuth.uid, sessionId, formData, type);
+        console.log('auth', userAuth)
+        await createNewSession(userAuth.uid, sessionId);
+        await addPlayerToSession(newPlayer, sessionId);
       }
     } catch (err) {
       console.log('err', err);

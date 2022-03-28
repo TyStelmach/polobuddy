@@ -3,7 +3,6 @@ import { Container, Col, Row, Button } from 'reactstrap';
 import { AuthContext } from '../providers/AuthProvider';
 import ContentCard from '../components/core/ContentCard';
 import FormModal from "../components/home/FormModal";
-import { findExistingDocument } from '../services/collections';
 
 const Home = ({ user }) => {
   const [modal, setModal] = useState(false);
@@ -13,22 +12,10 @@ const Home = ({ user }) => {
     setType(e.target.name);
   };
 
-  useEffect(() => {
-    if (user) {
-      //check if in current session
-      // check if host
-      findExistingDocument();
-
-    }
-
-
-
-  }, []);
-
-
+  console.log('myuser', user)
   return (
     <Container>
-      {user && `Welcome back ${user.displayName}`}
+      {user && `Welcome back ${user.name}`}
       <Row xs="2">
         <Col>
           <ContentCard
@@ -52,7 +39,7 @@ const Home = ({ user }) => {
           </Col>
       </Row>
 
-      <FormModal id="myModal" toggle={togglePopup} type={type} modal={modal} />
+      <FormModal id="myModal" userId={user} toggle={togglePopup} type={type} modal={modal} />
     </Container>
   )
 };

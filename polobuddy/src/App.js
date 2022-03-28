@@ -1,4 +1,3 @@
-/* eslint import/first: 0 */ 
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import PageRouting from './components/routes';

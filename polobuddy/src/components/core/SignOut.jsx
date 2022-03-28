@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { Button } from 'reactstrap';
 import { AuthContext } from '../../providers/AuthProvider';
 
-const SignOut = () => {
+const SignOut = ({ id }) => {
   const { logout } = useContext(AuthContext);
 
   return (
     <Button 
       color="primary"
-      onClick={() => logout()}>
+      onClick={() => logout(id)}>
       Sign Out
     </Button>
   )

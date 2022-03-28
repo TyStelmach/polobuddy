@@ -3,7 +3,7 @@ class Player {
     this.name = username;
     this.skillName = skillName;
     this.gameCount = 0;
-    this.isHost = false;
+    this.isHost = isHost;
     this.sessionPublicId = sessionId;
     this.weight = 0;
   }
