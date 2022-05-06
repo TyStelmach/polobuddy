@@ -7,6 +7,7 @@ import { addDoc, getDoc, setDoc, deleteDoc, updateDoc, collection, doc, query, w
 
 const findExistingDocument = async (documentId, collectionName) => {
   try {
+    console.log('aaa', documentId, collectionName)
     const documentRef = doc(db, collectionName, documentId);
     const q = await getDoc(documentRef);
     return q.data();

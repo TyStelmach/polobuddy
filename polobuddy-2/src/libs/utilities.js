@@ -9,6 +9,20 @@ const generatePublicSessionId = async () => {
   return shortId;
 };
 
+const getCurrentUnix = () => new Date().getTime();
+
+const convertSingleDigitToTimestamp = (time) => {
+  const now = getCurrentUnix();
+  const endTime = Math.floor(new Date(now + (time*60000)));
+  //Pad timestamp to show full time on the clock
+  return endTime + 1000;
+}
+
+const preformatTimerDigits = (number) => ("0" + number).slice(-2);
+
 module.exports = {
-  generatePublicSessionId
+  getCurrentUnix,
+  generatePublicSessionId,
+  convertSingleDigitToTimestamp,
+  preformatTimerDigits
 }

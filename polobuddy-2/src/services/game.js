@@ -1,5 +1,7 @@
+const { Game } = require('../models/newGame'); 
 const { sortPlayersByPlayPercentage, weightPlayerIncrementally} = require('../libs/gameUtilities');
-
+const { convertSingleDigitToTimestamp } = require('../libs/utilities');
+const { updateActiveGameInSession } = require('./session.js');
 let teams = [
   {
     teamWeight: 0,
@@ -43,12 +45,28 @@ const generateTeams = (players, totalGames) => {
   selectPlayersForTeams(playerPool);
   return teams;
 }
-
-const startGameInSession = async({ sessionId, teams, speed}) => {
-
-  
-
-}
+/*
+this.isStarted = false;
+    this.speed = null;
+    this.timeRemaining = 0;
+    this.teams = {
+      teamOne: [],
+      teamTwo: []
+    }
+*/
+const startGameInSession = async(sessionId, teams, speed) => {
+  const newGame = new Game();
+  newGame.isStarted = true;
+  newGame.speed = 'Testing';
+  newGame.endsOn = convertSingleDigitToTimestamp(15);
+  newGame.duration = 1;
+  teams.forEach((team, index) => {
+    newGame.teams.push(team)
+  });
+   
+  await updateActiveGameInSession(newGame, sessionId);
+  return newGame;
+};
 
 
 export {

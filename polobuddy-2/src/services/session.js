@@ -11,12 +11,12 @@ const createNewSession = async (userId, sessionPublicId) => {
 };
 
 const getExistingSessionData = async (sessionId) => {
-  const session = findExistingDocument(sessionId, 'Sessions');
+  const session = await findExistingDocument(sessionId, 'Sessions');
   return session;
 };
 
 const addPlayerToSession = async (player, sessionPublicId) => {
-  const sessionExists = getExistingSessionData(sessionPublicId);
+  const sessionExists = await getExistingSessionData(sessionPublicId);
   if (sessionExists) {
     await updateExistingDocument(sessionPublicId, {
       activeUsers: arrayUnion({...player}),
@@ -24,8 +24,19 @@ const addPlayerToSession = async (player, sessionPublicId) => {
   }
 };
 
+const updateActiveGameInSession = async (currentGame, sessionPublicId) => {
+  const sessionExists = await getExistingSessionData(sessionPublicId);
+  console.log('existis', sessionExists)
+  if (sessionExists) {
+    await updateExistingDocument(sessionPublicId, {
+      activeGame: {...currentGame},
+    }, 'Sessions');
+  }
+}
+
 export {
   createNewSession,
   getExistingSessionData,
-  addPlayerToSession
+  addPlayerToSession,
+  updateActiveGameInSession
 }
