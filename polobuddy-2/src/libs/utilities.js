@@ -18,7 +18,7 @@ const convertSingleDigitToTimestamp = (time) => {
   return endTime + 1000;
 }
 
-const preformatTimerDigits = (number) => ("0" + number).slice(-2);
+const preformatTimerDigits = (number) => ("00" + number).slice(-2);
 
 module.exports = {
   getCurrentUnix,

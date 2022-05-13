@@ -1,5 +1,7 @@
 import React from 'react';
 import { Card, CardBody, CardTitle, CardText } from 'reactstrap';
+import UsersTable from "../core/UserTable";
+
 
 const PendingGameCard = ({
   title,
@@ -15,7 +17,9 @@ const PendingGameCard = ({
       <CardText>
         {description}
       </CardText>
-      {children}      
+      {pendingGame && pendingGame.map((team, index) =>
+        <UsersTable key={`team-table-${index+1}`} players={team.players} type="game"/>
+      )}      
     </CardBody>
   </Card>
 );

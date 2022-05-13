@@ -1,5 +1,21 @@
 import { db } from '../libs/firebase-config'; 
-import { addDoc, getDoc, setDoc, deleteDoc, updateDoc, collection, doc, query, where } from 'firebase/firestore';
+import { addDoc, getDoc, setDoc, deleteDoc, updateDoc, collection, doc, onSnapshot, query, where } from 'firebase/firestore';
+
+const subscribeToSnapshot = async (documentId, collectionName) => {
+  try {
+    const documentRef = doc(db, collectionName, documentId);
+    let b;
+    const unsub = await onSnapshot(doc(db, "Sessions", documentId), doc => {
+      return doc.data();
+    });
+    // const q = await onSnapshot(documentRef, doc => doc.data);
+    // console.log('a', q)
+    // return q;
+    console.log('bb', unsub)
+  } catch (err) {
+    console.log('err', err);
+  }
+};
 
 /*
 * Find a document within the firestore with a matching document ID
@@ -7,7 +23,6 @@ import { addDoc, getDoc, setDoc, deleteDoc, updateDoc, collection, doc, query, w
 
 const findExistingDocument = async (documentId, collectionName) => {
   try {
-    console.log('aaa', documentId, collectionName)
     const documentRef = doc(db, collectionName, documentId);
     const q = await getDoc(documentRef);
     return q.data();
@@ -42,7 +57,7 @@ const updateExistingDocument = async (id, payload, collectionName) => {
   try {
     const documentRef = doc(db, collectionName, id);
     const q = await updateDoc(documentRef, payload);
-    console.log(q);
+    return q;
   } catch (err) {
     console.log('err', err);
   } 
@@ -61,6 +76,7 @@ const deleteDocumentById = async (id, collectionName) => {
 };
 
 export {
+  subscribeToSnapshot,
   findExistingDocument,
   addNewDocumentPresetId,
   addNewDocumentRandomId,

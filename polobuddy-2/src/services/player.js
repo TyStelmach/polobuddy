@@ -2,8 +2,6 @@ const { Player } = require('../models/newPlayer');
 const { addNewDocumentRandomId, addNewDocumentPresetId } = require('./collections');
 
 const createNewPlayer = async (userId, sessionId, formData, type) => {
-  console.log('aaaaa', userId)
-
   const { username, skillLevel } = formData;
   const newPlayer = new Player();
   newPlayer.name = username;

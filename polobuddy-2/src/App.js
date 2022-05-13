@@ -7,11 +7,6 @@ import FirebaseProvider from './providers/FirebaseProvider';
 const App = () => {
   const [session, setSession] = useState({});
   const [loading, setLoading] = useState(true);
-
-  //getSessionsFromFirestore();
-  // snapshot.forEach(doc => {
-  //   console.log(doc.id, '=>', doc.data());
-  // });
  
   return (
     <div className="App">

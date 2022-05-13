@@ -1,7 +1,10 @@
 const { Game } = require('../models/newGame'); 
-const { sortPlayersByPlayPercentage, weightPlayerIncrementally} = require('../libs/gameUtilities');
+const { sortPlayersByPlayPercentage, weightPlayerIncrementally, getPauseDiffInActiveGame} = require('../libs/gameUtilities');
 const { convertSingleDigitToTimestamp } = require('../libs/utilities');
-const { updateActiveGameInSession } = require('./session.js');
+const { updateActiveGameInSession, getExistingSessionData } = require('./session.js');
+const { updateExistingDocument } = require('./collections');
+const { getCurrentUnix } = require('../libs/utilities');
+
 let teams = [
   {
     teamWeight: 0,
@@ -68,8 +71,33 @@ const startGameInSession = async(sessionId, teams, speed) => {
   return newGame;
 };
 
+const togglePauseInActiveGame = async (sessionPublicId, endTimestamp, gamePaused) => {
+  const { activeGame } = await getExistingSessionData(sessionPublicId);
+  let pauseState;
+  if (activeGame) {
+    const currentTimestamp = getCurrentUnix();
+
+    if (!activeGame.isPaused) {
+      await updateExistingDocument(sessionPublicId, {
+        "activeGame.pauseTimestamp": currentTimestamp,
+        "activeGame.isPaused": true,
+      }, 'Sessions');
+      pauseState = true;
+    } else {
+      const newEndTime = getPauseDiffInActiveGame(currentTimestamp, endTimestamp, activeGame.pauseTimestamp);
+      await updateExistingDocument(sessionPublicId, {
+        "activeGame.endsOn": newEndTime,
+        "activeGame.isPaused": false,
+        "activeGame.pauseTimestamp": null
+      }, 'Sessions');
+      pauseState = false;
+    }
+  }
+  return pauseState;
+};
 
 export {
   startGameInSession,
-  generateTeams
+  generateTeams,
+  togglePauseInActiveGame
 }

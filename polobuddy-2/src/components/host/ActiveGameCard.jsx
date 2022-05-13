@@ -1,4 +1,6 @@
+import { render } from '@testing-library/react';
 import React from 'react';
+import { useEffect } from 'react/cjs/react.development';
 import { Card, CardBody, CardTitle, CardText } from 'reactstrap';
 import UsersTable from "../core/UserTable";
 import Timer from '../game/GameTimer';
@@ -6,10 +8,21 @@ import Timer from '../game/GameTimer';
 const ActiveGameCard = ({
   title,
   description,
-  children,
-  activeGame
+  activeGame,
 }) => {
-  console.log('active', activeGame)
+const renderTimer = () => {
+  return (
+    <Timer 
+      endsOn={activeGame?.endsOn} 
+      isPaused={activeGame?.isPaused}
+    />
+  )
+};
+
+useEffect(() => {
+  renderTimer();
+}, [])
+
 return (
   <Card>
     <CardBody>
@@ -20,7 +33,7 @@ return (
         test
 
       </CardText>
-      <Timer endsOn={activeGame?.endsOn} duration={activeGame?.duration} />
+      {renderTimer()}
       {activeGame && activeGame.teams.map((team, index) =>
         <UsersTable key={`team-table-${index+1}`} players={team.players} type="game"/>
       )}

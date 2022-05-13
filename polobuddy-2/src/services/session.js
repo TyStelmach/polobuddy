@@ -1,6 +1,6 @@
 import { arrayUnion } from 'firebase/firestore';
 const { Session } = require('../models/newSession');
-const { addNewDocumentPresetId, addDocToCollection, updateExistingDocument, findExistingDocument } = require('./collections');
+const { subscribeToSnapshot, addNewDocumentPresetId, addDocToCollection, updateExistingDocument, findExistingDocument } = require('./collections');
 
 const createNewSession = async (userId, sessionPublicId) => {
   const newSession = new Session();
@@ -9,6 +9,11 @@ const createNewSession = async (userId, sessionPublicId) => {
   await addNewDocumentPresetId(newSession.publicId, {...newSession}, 'Sessions');
   return newSession.publicId;
 };
+
+const refreshSessionData = async (sessionId) => {
+  const unsub = await subscribeToSnapshot(sessionId, 'Sessions');
+  return unsub;
+}
 
 const getExistingSessionData = async (sessionId) => {
   const session = await findExistingDocument(sessionId, 'Sessions');
@@ -26,7 +31,6 @@ const addPlayerToSession = async (player, sessionPublicId) => {
 
 const updateActiveGameInSession = async (currentGame, sessionPublicId) => {
   const sessionExists = await getExistingSessionData(sessionPublicId);
-  console.log('existis', sessionExists)
   if (sessionExists) {
     await updateExistingDocument(sessionPublicId, {
       activeGame: {...currentGame},
@@ -36,6 +40,7 @@ const updateActiveGameInSession = async (currentGame, sessionPublicId) => {
 
 export {
   createNewSession,
+  refreshSessionData,
   getExistingSessionData,
   addPlayerToSession,
   updateActiveGameInSession

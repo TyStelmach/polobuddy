@@ -1,46 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Card, CardBody, CardTitle } from 'reactstrap';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../libs/firebase-config'; 
+
 import UsersTable from "../components/core/UserTable";
 import ContentCard from '../components/core/ContentCard';
 import FormModal from "../components/home/FormModal";
 import ActiveGameCard from "../components/host/ActiveGameCard";
-import PendingGameCard from "../components/host/ActiveGameCard";
-import { getExistingSessionData } from '../services/session';
-import { generateTeams, startGameInSession } from '../services/game';
+import PendingGameCard from "../components/host/PendingGameCard";
+import Loader from "../components/core/LoadingScreen";
+import { getExistingSessionData, refreshSessionData } from '../services/session';
+import { generateTeams, startGameInSession, togglePauseInActiveGame } from '../services/game';
 import { getCurrentUnix } from "../libs/utilities";
 
 
 const Host = ({ user }) => {
-  const [sessionId, setSessionId] = useState('');
-  const [mySession, setMySession] = useState({});
+  const [snapshot, setSnapshot] = useState(null);
+  const [mySessionId, setMySessionId] = useState('');
+  const [mySession, setMySession] = useState(null);
   const [sessionPlayers, setSessionPlayers] = useState([]);
   const [sessionActiveGame, setSessionActiveGame] = useState(null);
   const [sessionTotalGames, setSessionTotalGames] = useState('');
   const [sessionCurrentTeams, setSessionCurrentTeams] = useState([]);
 
+  const [activeGamePause, setActiveGamePause] = useState(false);
+
+  const refreshSession = async () => {
+    // const session = await getExistingSessionData(user.sessionPublicId);
+    // const session = await refreshSessionData(user.sessionPublicId);
+    // if (session) setMySession(session);
+  }
+
   const hostControls = {
     startGame: async () => {
-      const newGame = await startGameInSession(sessionId, sessionCurrentTeams);
-      console.log('myGame', newGame)
+      const newGame = await startGameInSession(mySessionId, sessionCurrentTeams);
       setSessionActiveGame(newGame);
+      setActiveGamePause(false);
     },
-
     shuffleTeams: () => {
       const teams = generateTeams(sessionPlayers, sessionTotalGames);
-      console.log('myteams', teams)
       setSessionCurrentTeams(teams);
-    } 
-  };
+    },
+    pauseGame: async () => {
+      const pauseState = await togglePauseInActiveGame(mySessionId, sessionActiveGame.endsOn, activeGamePause);
+      setActiveGamePause(pauseState);
+  },
+}
 
-  const handleHostButton = (e) => {
+  const handleHostButton = async (e) => {
     e.preventDefault();
     const command = e.target.name;
     if (hostControls[command]) hostControls[command]();
-  };
+    };
 
   const syncStates = () => {
     setSessionPlayers([...mySession.activeUsers]);
-    setSessionId(user.sessionPublicId);
+    setMySessionId(user.sessionPublicId);
     setSessionTotalGames(mySession.totalGames);
     if (mySession.activeGame) {
       const { activeGame } = mySession;
@@ -50,26 +65,38 @@ const Host = ({ user }) => {
     }
   };
 
-
-  useEffect(async () => {
+  useEffect(() => {
     if (user) {
-      const session = await getExistingSessionData(user.sessionPublicId);
-      if (session) setMySession(session);
+      const unsub = onSnapshot(doc(db, "Sessions", user.sessionPublicId), docSnapshot => {
+        setSnapshot(docSnapshot.data());
+      });
+      return () => {
+        unsub();
+      }
     }
   }, [user]);
 
   useEffect(() => {
-    if (Object.keys(mySession).length > 0) {
-      syncStates();
-      // Set up better datasync to not render page until all data is available (avoid fouc content)
+    if (mySession === null) {
+      setMySession(snapshot);
+    } else {
+      setMySession({...snapshot, ...mySession})
     }
-  }, [mySession]);
 
+  }, [snapshot]);
 
+  useEffect(() => {
+    if (mySession !== null) {
+      console.log('syncing', mySession)
+      syncStates();
+      // get snapshot to sync up all app states
+    }
+  },[mySession]);
 
   return (
     <Container>
-      {user && `Welcome back ${user.name}, you're in SESSION: ${sessionId}`}
+      {!mySessionId && <Loader />}
+      {user && `Welcome back ${user.name}, you're in SESSION: ${mySessionId}`}
       <Row xs="2">
         <Col>
           <Card>
@@ -90,6 +117,9 @@ const Host = ({ user }) => {
             <Button name="startGame" onClick={handleHostButton}>
               Start Game
             </Button>
+            <Button name="pauseGame" onClick={handleHostButton}>
+              Pause Game
+            </Button>
           </CardBody>
           </Card>
           {sessionActiveGame ?
@@ -99,13 +129,13 @@ const Host = ({ user }) => {
             /> :
             <PendingGameCard
               title="Players in Queue"
+              pendingGame={sessionCurrentTeams}
             />
           }
         </Col>
       </Row>
-
     </Container>
   )
-};
+}
 
 export default Host;

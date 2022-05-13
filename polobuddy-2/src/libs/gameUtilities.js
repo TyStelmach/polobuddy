@@ -25,12 +25,14 @@ const sortPlayersByPlayPercentage = (players, sessionGameCount) => {
 const weightPlayerIncrementally = (playerSkill, players) => {
   players.forEach(player => {
     const skillDeficit = 1 - (player.skillLevel/playerSkill);
-    console.log(player.weight, skillDeficit)
     player.weight = player.weight - skillDeficit;
   })
 }
 
+const getPauseDiffInActiveGame = (currTimeStamp, currEndTime, currPauseStamp) => Math.floor(currEndTime + (currTimeStamp - currPauseStamp));
+
 module.exports = {
   sortPlayersByPlayPercentage,
   weightPlayerIncrementally,
+  getPauseDiffInActiveGame
 }

@@ -12,7 +12,6 @@ const Header = ({ player }) => {
     if (user && player) {
       const { isHost, sessionPublicId } = player;
       const session = await getExistingSessionData(sessionPublicId);
-      console.log(session)
       if (session) {}// redirect
       
     }

@@ -11,8 +11,6 @@ const Home = ({ user }) => {
     setModal(!modal);
     setType(e.target.name);
   };
-
-  console.log('myuser', user)
   return (
     <Container>
       {user && `Welcome back ${user.name}`}

@@ -41,7 +41,6 @@ export const AuthProvider = (props) => {
   const logoutFunction = async (id) => {
     try {
       setUser(null);
-      console.log('myid', id)
       await deleteDocumentById(id, 'Players');
       await signOut(auth);
     } catch (err) {

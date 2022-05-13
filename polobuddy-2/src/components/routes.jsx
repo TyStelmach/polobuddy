@@ -15,7 +15,6 @@ const PageRouting = () => {
     if (!loading && user) {
       //check if in current session
       const existingUser = await findExistingDocument(user.uid, 'Players');
-      console.log('zzz', existingUser)
       if (existingUser) {
         setCurrentUser(existingUser);
       }
